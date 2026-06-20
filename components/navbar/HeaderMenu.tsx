@@ -22,7 +22,9 @@ const links = [
       { link: '/advanced-tutorial', label: 'Package Tutorial' }
     ]
   },
+  { link: '/uniprot-id-explain', label: "Explainability Tool"},
   { link: '/about', label: 'About' },
+  
 ];
 
 export function HeaderMenu() {

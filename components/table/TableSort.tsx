@@ -197,7 +197,7 @@ export function TableSort({ predictions }: TableResProps) {
       <Table.Td className={classes.td}>
         <span style={{ display: 'inline-block' }}>
           {row.peptide_seq.split('').map((char, index) => (
-            <span key={index} style={{ fontWeight: index === 10 ? 'bold' : 'normal', color: index === 10 ? 'darkblue' : 'inherit', fontSize: index === 10 ? '1.2rem' : 'inherit' }}>
+            <span key={index} style={{ fontWeight: index === 64 ? 'bold' : 'normal', color: index === 64 ? 'darkblue' : 'inherit', fontSize: index === 64 ? '1.2rem' : 'inherit' }}>
               {char}
             </span>
           ))}
