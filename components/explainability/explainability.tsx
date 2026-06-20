@@ -210,7 +210,7 @@ function Explain() {
             ]}
             mb="md"
           />
-
+          {/* @ts-ignore */}
           <Plot
             data={[
               {
