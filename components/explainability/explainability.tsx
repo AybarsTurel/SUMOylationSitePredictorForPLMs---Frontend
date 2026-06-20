@@ -19,10 +19,12 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 
 // Plotly'i sadece client tarafında yüklenecek şekilde dinamik import ediyoruz
+// @ts-ignore
 const Plot = dynamic(() => import('react-plotly.js'), { 
   ssr: false,
-  loading: () => <Loader size="md" /> // Yüklenirken görünecek geçici loader
+  loading: () => <Loader size="md" />
 });
+
 import { TableSort } from '../table/TableSort';
 const AA = "ACDEFGHIKLMNPQRSTVWY".split("");
 
