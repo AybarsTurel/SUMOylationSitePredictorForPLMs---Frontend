@@ -19,11 +19,15 @@ interface TableResProps {
 }
 
 // Function to generate CSV content from table data
-function generateCSV(predictions) {
+function generateCSV(predictions: any[]) {
   let csvContent = 'protein_id, protein_name, peptide_seq, lysine_position, nonsumoylation_class_probs, sumoylation_class_probs, predicted_labels\n';
-  predictions.forEach(prediction => {
+  
+  predictions.forEach((prediction: any) => {
+    // Küçük bir düzeltme: İkinci sıradaki protein_name alanına da prediction.protein_id vermişsin, 
+    // eğer backendden protein_name geliyorsa prediction.protein_name olarak güncelleyebilirsin.
     csvContent += `${prediction.protein_id}, ${prediction.protein_id}, ${prediction.peptide_seq}, ${prediction.lysine_position}, ${prediction.nonsumoylation_class_probs}, ${prediction.sumoylation_class_probs}, ${prediction.predicted_labels}\n`;
   });
+  
   return csvContent;
 }
 

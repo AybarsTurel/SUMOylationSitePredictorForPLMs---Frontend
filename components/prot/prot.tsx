@@ -1,12 +1,12 @@
-'use client'
+'use client';
 import { TableSort } from '../table/TableSort';
 
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Title, Text, Flex, Loader,Modal ,TextInput, Table, Space, Group, Alert, Slider} from '@mantine/core';
+import { Button, Container, Title, Text, Flex, Loader, Modal, TextInput, Table, Space, Group, Alert, Slider } from '@mantine/core';
 import axios from 'axios';
 
 // Function to generate CSV content from table data
-function generateCSV(predictionsData) {
+function generateCSV(predictionsData: any[]) {
   // Header row
   let csvContent = 'UniProt ID, Lysine Position, Prediction\n';
   
@@ -37,7 +37,6 @@ function Prot() {
     }
   }, [uniProtID]);
   
-  
   const handleLoadSampleUniprot = () => {
     setUniProtID('O00566');
   };
@@ -48,6 +47,7 @@ function Prot() {
 
    // Function to handle downloading the table data as CSV
    const handleDownloadCSV = () => {
+    if (!predictionsData) return;
     // Generate CSV content
     const csvContent = generateCSV(predictionsData);
     // Create a Blob containing the CSV data
@@ -65,179 +65,165 @@ function Prot() {
     // Cleanup
     URL.revokeObjectURL(url);
   };
+  
   const marks = [
     { value: 0, label: '0' },
     { value: 0.5, label: '0.5' },
     { value: 1, label: '1' }
   ];
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     setPredictionsData(null);
     setShowError(false);
     setShowWarning(false);
     event.preventDefault();
     
     setIsLoading(true);
-    setIsSubmitted(true); // Set handleSubmit to true when the form is submitted
-    console.log(lysine);
+    setIsSubmitted(true); 
 
     try {
-      let response ={};
-      if(lysine ===""){
+      let response: any;
+      if (lysine === "") {
          response = await axios.post(
           "http://127.0.0.1:8000/uniprot-prediction/",
           {
             uniprot_id: uniProtID,
             threshold: thresholdValue
           }
-          
         );
-      }
-      else{
+      } else {
          response = await axios.post(
           "http://127.0.0.1:8000/uniprot-prediction/",
           {
             uniprot_id: uniProtID,
             lysine_position: parseInt(lysine, 10),
             threshold: thresholdValue
-            
           }
-          
         );
       }
 
       const predictions = response.data.data;
       setPredictionsData(predictions);
       const Invalid_Ids = response.data.invalid_idS;
-      //console.log(threshold);
-      //console.log(Invalid_Ids);
-      //console.log(predictions);
-      if(Invalid_Ids.length != 0)
-        {
-          const message = "You entered invalid Uniprot ID(s). Invalid Uniprot ID(s): " + Invalid_Ids;
-          setWarningMsg(message); 
-          setShowWarning(true);
-        }
-    } catch (error) {
-      if (error.response) {
-        setErrorMsg(error.response.data.error); // Extract the error message from the response
-        setShowError(true); // Show the error modal
-      } else {
-        console.error("Error uploading file:", error);
+
+      if (Invalid_Ids && Invalid_Ids.length !== 0) {
+        const message = "You entered invalid Uniprot ID(s). Invalid Uniprot ID(s): " + Invalid_Ids;
+        setWarningMsg(message); 
+        setShowWarning(true);
       }
+    } catch (error: any) {
+      if (error.response) {
+        setErrorMsg(error.response.data.error || "An error occurred."); 
+        setShowError(true); 
+      } else {
+        console.error("Error fetching data:", error);
+      }
+    } finally {
+      setIsLoading(false); 
     }
-    finally{
-   
-      setIsLoading(false); // Set loading state back to false when finished
-    }
-    
   };
+
   return (
     <Container size="lg">
-    <Flex justify="space-between">
-      {/* Left Half: Form Elements */}
-      <Flex direction={'column'} style={{ width: '50%', paddingRight: '40px' }}>
-        <form onSubmit={handleSubmit}>
-          <Title order={1} size="h1" style={{ marginBottom: '20px' }}>
-            Predict with UniprotID
-          </Title>
+      <Flex justify="space-between">
+        {/* Left Half: Form Elements */}
+        <Flex direction={'column'} style={{ width: '50%', paddingRight: '40px' }}>
+          <form onSubmit={handleSubmit}>
+            <Title order={1} size="h1" style={{ marginBottom: '20px' }}>
+              Predict with UniprotID
+            </Title>
 
-          <Flex justify="space-between" align="center" style={{ marginBottom: '20px' }}>
-            <TextInput
-              variant="filled"
-              size="md"
-              radius="lg"
-              withAsterisk
-              label="Uniprot ID"
-              description="Please enter UniProtID."
-              placeholder="O00566"
-              value={uniProtID}
-              onChange={(event) => setUniProtID(event.currentTarget.value)}
-              style={{ width: '75%' }}
-            />
-            <div style={{ textAlign: 'right', paddingTop:'42px' }}>
-              <Text component="a" style={{ cursor: 'pointer', color: 'blue'}} onClick={handleLoadSampleUniprot}>
-                Load Sample
-              </Text>
-            </div>
-          </Flex>
-          <Flex justify="space-between" align="center" style={{ marginBottom: '20px' }}>
-            <TextInput
-              variant="filled"
-              size="md"
-              radius="lg"
-              label="Lysine Position"
-              description="Please enter the Lysine Position."
-              placeholder="20"
-              value={lysine}
-              onChange={(event) => setLysine(event.currentTarget.value)}
-              style={{ width: '75%' }}
-              disabled = {uniProtID.includes(',')}
-            />
-            <div style={{ textAlign: 'right',paddingTop:'42px' }}>
-              <Text component="a" style={{ cursor: 'pointer', color: 'blue'}} onClick={handleLoadSampleLysine}>
-                Load Sample
-              </Text>
-            </div>
-          </Flex>
-              <Text fw={500}> Threshold Value for Display</Text>
-              <Text c="dimmed" size="sm" >Please choose the threshold value. </Text>
-              <Space h="xs" />
-              <Slider 
-                defaultValue={0.5} 
-                marks={marks} 
-                max={1} 
-                step={0.1} 
-                size={"md"}
+            <Flex justify="space-between" align="center" style={{ marginBottom: '20px' }}>
+              <TextInput
+                variant="filled"
+                size="md"
+                radius="lg"
+                withAsterisk
+                label="Uniprot ID"
+                description="Please enter UniProtID."
+                placeholder="O00566"
+                value={uniProtID}
+                onChange={(event) => setUniProtID(event.currentTarget.value)}
                 style={{ width: '75%' }}
-                value={thresholdValue} onChange={setThresholdValue}
-                 />
-              <Space h="sm" />
+              />
+              <div style={{ textAlign: 'right', paddingTop:'42px' }}>
+                <Text component="a" style={{ cursor: 'pointer', color: 'blue'}} onClick={handleLoadSampleUniprot}>
+                  Load Sample
+                </Text>
+              </div>
+            </Flex>
+            <Flex justify="space-between" align="center" style={{ marginBottom: '20px' }}>
+              <TextInput
+                variant="filled"
+                size="md"
+                radius="lg"
+                label="Lysine Position"
+                description="Please enter the Lysine Position."
+                placeholder="20"
+                value={lysine}
+                onChange={(event) => setLysine(event.currentTarget.value)}
+                style={{ width: '75%' }}
+                disabled={uniProtID.includes(',')}
+              />
+              <div style={{ textAlign: 'right',paddingTop:'42px' }}>
+                <Text component="a" style={{ cursor: 'pointer', color: 'blue'}} onClick={handleLoadSampleLysine}>
+                  Load Sample
+                </Text>
+              </div>
+            </Flex>
+            <Text fw={500}> Threshold Value for Display</Text>
+            <Text c="dimmed" size="sm">Please choose the threshold value. </Text>
+            <Space h="xs" />
+            <Slider 
+              defaultValue={0.5} 
+              marks={marks} 
+              max={1} 
+              step={0.1} 
+              size={"md"}
+              style={{ width: '75%' }}
+              value={thresholdValue} 
+              onChange={setThresholdValue}
+            />
+            <Space h="sm" />
 
-          <Flex direction={'row'} justify="left" style={{ marginTop: '30px' }}>
-            <Button type="submit" size="lg" style={{ width: '50%' }} radius="md" variant="gradient" color='blue'>
-              {isLoading ? <Loader color="white" size={24} /> : 'Submit'}
-            </Button>
-          </Flex>
-        </form>
+            <Flex direction={'row'} justify="left" style={{ marginTop: '30px' }}>
+              <Button type="submit" size="lg" style={{ width: '50%' }} radius="md" variant="gradient" color='blue'>
+                {isLoading ? <Loader color="white" size={24} /> : 'Submit'}
+              </Button>
+            </Flex>
+          </form>
+        </Flex>
+
+        {/* Right Half: Text or Additional Content */}
+        <Flex direction={'column'} justify="center" style={{ width: '50%', paddingLeft: '40px' }}>
+          <p style={{ margin: '0px', paddingBottom:'75px' }}>
+            You can enter Uniprot ID and Lysine position to get results. 
+            You have to enter at least one valid Uniprot ID to get result. 
+            If you want to see the result for the specific Lysine position, you have to enter valid Lysine position for given Uniprot ID. 
+            Besides, you can arrange threshold value from slider. Results with a Sumoylation probability equal to or greater than the selected threshold will be listed. 
+          </p>
+        </Flex>
       </Flex>
+      <Space h="xl" />
+      <Space h="xl" />
 
-      {/* Right Half: Text or Additional Content */}
-      <Flex direction={'column'} justify="center" style={{ width: '50%', paddingLeft: '40px' }}>
-        <p style={{ margin: '0px',
-          paddingBottom:'75px'
-         }}>You can enter Uniprot ID and Lysine position to get results. 
-        You have to enter at least one valid Uniprot ID to get result. 
-        If you want to see the result for the specific Lysine position, you have to enter valid Lysine position for given Uniprot ID. 
-        Besides, you can arrange threshold value from slider. Results with a Sumoylation probability equal to or greater than the selected threshold will be listed. </p>
-      </Flex>
-    </Flex>
-    <Space h="xl" />
-    <Space h="xl" />
-
-    {/* Error Alert */}
-    {showError && (
-      <Alert color="red" withCloseButton onClose={() => setShowError(false)} title="Error!">
-        {errorMsg}
-      </Alert>
-      
-    )}
+      {/* Error Alert */}
+      {showError && (
+        <Alert color="red" withCloseButton onClose={() => setShowError(false)} title="Error!">
+          {errorMsg}
+        </Alert>
+      )}
       <Space h="xl" />
       {showWarning && (
-      <Alert color="yellow" withCloseButton onClose={() => setShowWarning(false)} title="Warning!">
-        {warningMsg}
-      </Alert>
+        <Alert color="yellow" withCloseButton onClose={() => setShowWarning(false)} title="Warning!">
+          {warningMsg}
+        </Alert>
+      )}
+      <Space h="xl" />
       
-    )}
-    <Space h="xl" />
-    {/* Display predictions data if available */}
-    
       {!isLoading && isSubmitted && !showError ? <TableSort predictions={predictionsData}/> : null}
-  
-  </Container>
-);
-
-};
+    </Container>
+  );
+}
 
 export default Prot;
-

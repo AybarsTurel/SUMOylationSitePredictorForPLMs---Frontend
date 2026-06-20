@@ -8,7 +8,7 @@ import axios from 'axios';
 function FastaFile() {
   const icon = <IconFile style={{ width: 25, height: 25 }} />;
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [predictionsData, setPredictionsData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadSample, setIsLoadSample] = useState(false);
@@ -17,17 +17,12 @@ function FastaFile() {
   const [warningMsg, setWarningMsg] = useState(''); // State to store the error message
   const [showWarning, setShowWarning] = useState(false);
 
-  const handleFileInputChange = (e) => {
-    if (e.target.files) {
-      handleFileChange(e.target.files[0]);
-    }
-  };
 
-  const handleFileChange = (file) => {
-    setFile(file);
-    setPredictionsData([])
-    setPredictionsData(null);
-  };
+  const handleFileChange = (file: File | null) => {
+  setFile(file);
+  setPredictionsData([]);
+  setPredictionsData(null);
+};
 
   const handleUpload = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -46,8 +41,8 @@ function FastaFile() {
         console.log(response.data);
         setShowWarning(false);
         if (response.data.errors.length > 0){
-          const errorMessages = response.data.errors.map((error) => error.error).join(", ");
-          const ids = response.data.errors.map((error) => error.ids).join(", ");
+          const errorMessages = response.data.errors.map((error: any) => error.error).join(", ");
+          const ids = response.data.errors.map((error: any) => error.ids).join(", ");
           setWarningMsg(`Errors: ${errorMessages}. IDs: ${ids}`);
           setShowWarning(true);
         }

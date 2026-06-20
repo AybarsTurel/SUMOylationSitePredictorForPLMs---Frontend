@@ -262,22 +262,22 @@ function Explain() {
 
 
           <Text mb="md" style={{ fontFamily: "monospace" }}>
-            {sequence.split("").map((aa, i) => (
-              <span
-                key={i}
-                style={
-                  i === 10
-                    ? {
-                        fontSize: "28px",
-                        fontWeight: "bold",
-                        color: "darkblue"
-                      }
-                    : {}
-                }
-              >
-                {aa}
-              </span>
-            ))}
+            {sequence.split("").map((aa: string, i: number) => (
+            <span
+              key={i}
+              style={
+                i === 10
+                  ? {
+                      fontSize: "28px",
+                      fontWeight: "bold",
+                      color: "darkblue"
+                    }
+                  : {}
+              }
+            >
+              {aa}
+            </span>
+          ))}
           </Text>
             <Space h="xl" />
         </Paper>
