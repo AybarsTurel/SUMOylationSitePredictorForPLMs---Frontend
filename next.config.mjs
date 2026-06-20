@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eactStrictMode: true,
+  reactStrictMode: true,
   swcMinify: true,
   output: 'export', // statik HTML çıktısı için
   eslint: {
