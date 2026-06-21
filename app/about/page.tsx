@@ -1,115 +1,223 @@
+"use client";
+
+// @ts-ignore
 import "@mantine/core/styles.css";
 import React from "react";
-import { Container,Text,Image} from "@mantine/core";
-export default function AboutPage() {
-    return (
-       <Container  size="lg" style={{paddingBottom:"50px" }}>
-            <Container >
-            <h2> What is SUMOnet?</h2>
-            <Text>The SUMOnet project aims to improve the user experience, user interface, and overall performance of a web application dedicated to
-  predicting potential protein chains resulting from the SUMOylation process, which is implicated in genetic-based diseases such as
-Alzheimer's, cancer, and diabetes. The third version of SUMOnet (SUMOnet-3) is deployed in this website.<br/> SUMOnet takes 3 different input types:
-First, the user can enter the UniprotID of the protein and the lysine position (optionally). Additionally users can adjust the threshold value as they wish
-so that only the results whose Sumoylation Probability bigger than threshold will be shown. <br/>
-Another input type is entering the protein sequence that needs to be evaluated. Lastly, user can enter the input as FASTA format. <br/>
-After analyzed by machine learning model, SUMOnet gives the output as Protein ID, Protein Name, Lysine Position, Peptide Sequence, Sumoylation Probability and the Prediction.
- </Text>
- <br/>
- <div>
-          <Image 
-          src="/exampleOutput1.png"
-          alt="Output"   
-          radius="md"
-          fit="contain"
-          />
-        <p style={{ textAlign: 'center', marginTop: '10px', color: "red" }}>
-          Example Output of SUMOnet
-            </p>
-          </div>
-            </Container>
-            <Container>
-          <div>
-          <Image 
-          src="/SUMOnet3Architecture.png"
-          alt="SUMOnet3"   
-          radius="md"
-          fit="contain"
-          />
-        <p style={{ textAlign: 'center', marginTop: '10px', color: "red" }}>
-          Architecture of SUMOnet3
-            </p>
-          </div>
-            <div>
-          <h3>Performance of SUMOnet3:</h3>
-          <Text>
-         SUMOnets prediction performance is compared with the well-known machine learning models.
-        All three SUMOnets outperform the models in the literature and the trained XGBoost model.
-        Among the three architectures, SUMOnet-3 is the one that achieves the best scores. The F1-Score of SUMOnet-3 is 0.66, which is 5% more than XGBoost classifier.
-        MCC, ROC-AUC and AUPR scores of SUMOnet-3 are 0.57, 0.87 and 0.76, respectively. These correspond to an improvement of approximately 3% over the XGBoost classifier.
-        It is concluded that we can attain the best predictor by using SUMOnet-3. The models were also compared using the Receiver operating characteristic (ROC)
-        and precision-recall (PR) curves. As shown in below SUMOnet-3 is the best overall predictor across different false positive rates.
-          </Text>
-            </div>
-            <br/>
-            <div>
-          <Image 
-          src="/performanceComparison.png"
-          alt="SUMOnet3-Performance"   
-          radius="md"
-          fit="contain"
-          />
-        <p style={{ textAlign: 'center', marginTop: '10px', color: "red" }}>
-          Performance of SUMOnet3
-            </p>
-          </div>
-          </Container>
-          <Container>
-            <h3>Performance in Hard Case:</h3>
-            <Text>
-            The hard test set includes target sequences that lack SUMO motifs but are SUMOylated and sequences that are not SUMOylated but contain a SUMOylation motif.
-            These are the specific examples that would challenge predictors.
-            Image below shows the comparison of ROC curves for various methods. SUMOnet models perform the best compared to both XGBoost and previous methods.
-            SUMOnet-3, which relies on CNN and biGRU, is the best performer among all. 
-            This result demonstrates that the deep learning model can go beyond learning simple linear motifs.
-            </Text>
-            <br/>
-            <div>
-          <Image 
-          src="/hardCasePerformance.png"
-          alt="SUMOnet3-HardCasePerformance"   
-          radius="md"
-          fit="contain"
-          width={"400px"}
-          height={"400px"}
-          />
-        <p style={{ textAlign: 'center', marginTop: '10px', color: "red" }}>
-          Performance of SUMOnet3 in Hard Test Examples
-            </p>
-          </div>
-          </Container>
-        <Container>
-            <h2>Citation:</h2>
-            <Text>
-            If you use SUMOnet in your work please cite us: <br/>
-            <a href="https://www.biorxiv.org/content/10.1101/2023.08.25.554749v1" target="_blank" rel="noopener noreferrer">
-            Dilekoglu, B., Tascioglu O.,: Sumonet: Deep sequential prediction of sumoylation sites. bioRxiv (2023).
-            </a>
-          </Text>
-          <h2>Website Developers:</h2>
-          
-            
-                  <Text>Alper Mert - <a href="mailto:alpermert@sabanciuniv.edu">alpermert@sabanciuniv.edu</a></Text>
-        
-                  <Text>Bülent Emin Üstün - <a href="mailto:eustun@sabanciuniv.edu">eustun@sabanciuniv.edu</a> </Text>
-              
-                  <Text>Mehmet Eren Karabulut - <a href="mailto:mkarabulut@sabanciuniv.edu">mkarabulut@sabanciuniv.edu</a></Text>
-             
-                  <Text>Şevki Aybars Türel - <a href="mailto:aturel@example.com">aturel@sabanciuniv.edu</a></Text>
-              
-          
+import { 
+  Container, 
+  Text, 
+  Image, 
+  Title, 
+  Card, 
+  Grid, 
+  Badge, 
+  Stack, 
+  Group, 
+  ThemeIcon,
+  Divider,
+  Anchor,
+  SimpleGrid
+} from "@mantine/core";
+import { IconInfoCircle, IconChartBar, IconAlertTriangle, IconQuote, IconUsers } from "@tabler/icons-react";
 
-        </Container>
-       </Container> 
-    );
-  }
-  
+export default function AboutPage() {
+  return (
+    <Container size="md" py="xl">
+      {/* Üst Karşılama Alanı */}
+      <Stack align="center" mb="xl" gap="xs">
+        <Badge variant="dot" size="lg" color="blue">
+          About the Project
+        </Badge>
+        <Title order={1} size="h1" style={{ textAlign: "center", letterSpacing: "-0.5px" }}>
+          What is SUMO-ESM?
+        </Title>
+      </Stack>
+
+      <Stack gap="xl">
+        {/* PROJE TANIMI VE GİRİŞ */}
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Group mb="md">
+            <ThemeIcon color="blue" size="xl" radius="md">
+              <IconInfoCircle size="1.2rem" />
+            </ThemeIcon>
+            <Title order={2} size="h3">Overview</Title>
+          </Group>
+          
+          <Text mb="md" style={{ lineHeight: 1.6 }}>
+            The <strong>SUMO-ESM</strong> project aims to improve the user experience, user interface, and overall performance of a web application dedicated to predicting potential SUMOylation sites, which are highly implicated in genetic-based diseases such as Alzheimer's, cancer, and diabetes. 
+          </Text>
+          
+          <Text mb="md" style={{ lineHeight: 1.6 }}>
+            The underlying <strong>ESM-2</strong> transformer model is fine-tuned with a customized dataset enriched by robust data augmentation techniques. The platform processes three distinct input types: UniProt IDs (with optional target Lysine positions and customizable confidence thresholds), raw protein sequences, and high-throughput FASTA files.
+          </Text>
+
+          <Text mb="xl" style={{ lineHeight: 1.6 }}>
+            Upon analyzing the submissions through the transformer framework, SUMO-ESM maps out comprehensive parameters including Protein ID, Protein Name, Lysine Position, Peptide Sequence, Sumoylation Probability, and final categorical predictions.
+          </Text>
+
+          <Card.Section p="md" bg="var(--mantine-color-gray-0)">
+            <Stack align="center" gap="xs">
+              <Image 
+                src="/exampleOutput1.png"
+                alt="SUMO-ESM Output Interface Example"   
+                radius="md"
+                fit="contain"
+                maxWidth="100%"
+                h={350}
+              />
+              <Text size="xs" c="dimmed" style={{ fontStyle: "italic" }}>
+                Figure 1: Example Prediction Output Matrix of SUMO-ESM
+              </Text>
+            </Stack>
+          </Card.Section>
+        </Card>
+
+        {/* PERFORMANS DEĞERLENDİRMELERİ (İKİ GRAFİKLİ ALAN) */}
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Group mb="md">
+            <ThemeIcon color="teal" size="xl" radius="md">
+              <IconChartBar size="1.2rem" />
+            </ThemeIcon>
+            <Title order={2} size="h3">Model Benchmarks & Performance</Title>
+          </Group>
+          
+          <Text mb="xl" style={{ lineHeight: 1.6 }}>
+            The ESM-2 models fine-tuned with the <code>ESM2_SUMO-21-Matched-Extended128-ClusterHR</code> dataset significantly outperform existing tools in the literature and traditional machine learning baselines. Our model demonstrated a <strong>9.8% increase in AUC</strong> and an <strong>18.8% increase in AUPR</strong> over the previous leading framework, SUMOnet-3. Furthermore, our transformer-based approach dominated classical machine learning alternatives (such as XGBoost), yielding an 8.9% increase in AUC and 15.5% in AUPR. These results strongly suggest that transformer architectures excel at processing global sequence context across entire proteins.
+          </Text>
+
+          <Card.Section p="md" bg="var(--mantine-color-gray-0)">
+            <Stack align="center" gap="md">
+              
+              {/* Grafiklerin yan yana dizilmesi için Grid yapısı */}
+              <Grid gutter="md" justify="center" style={{ width: "100%" }}>
+                
+                {/* 1. Grafik: ROC Eğrisi */}
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <Stack align="center" gap="xs">
+                    <Image 
+                      src="/roc_exper.png" /* Kendi ROC grafiğinin dosya adıyla değiştirebilirsin */
+                      alt="ROC Curve Analysis"   
+                      radius="md"
+                      fit="contain"
+                      maxWidth="100%"
+                      h={300}
+                    />
+                    <Text size="xs" c="dimmed" style={{ fontStyle: "italic" }}>
+                      (a) ROC Curve Comparisons
+                    </Text>
+                  </Stack>
+                </Grid.Col>
+
+                {/* 2. Grafik: PR Eğrisi veya Bar Chart */}
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <Stack align="center" gap="xs">
+                    <Image 
+                      src="/PR_exp.png" /* Kendi PR veya AUC grafiğinin dosya adıyla değiştirebilirsin */
+                      alt="Precision-Recall Curve Analysis"   
+                      radius="md"
+                      fit="contain"
+                      maxWidth="100%"
+                      h={300}
+                    />
+                    <Text size="xs" c="dimmed" style={{ fontStyle: "italic" }}>
+                      (b) Precision-Recall (PR) Curve
+                    </Text>
+                  </Stack>
+                </Grid.Col>
+
+              </Grid>
+
+              {/* Ana Ortak Altyazı */}
+              <Text size="xs" c="dimmed" style={{ fontStyle: "italic", marginTop: "10px" }}>
+                Figure 2: Comprehensive Performance Benchmarks (ROC and PR Curves) against Baseline Models
+              </Text>
+            </Stack>
+          </Card.Section>
+        </Card>
+
+        {/* ZOR SENARYOLAR (HARD CASE) */}
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Group mb="md">
+            <ThemeIcon color="orange" size="xl" radius="md">
+              <IconAlertTriangle size="1.2rem" />
+            </ThemeIcon>
+            <Title order={2} size="h3">Performance in Non-Motif (Hard) Scenarios</Title>
+          </Group>
+          
+          <Text mb="xl" style={{ lineHeight: 1.6 }}>
+            The challenging evaluation subset isolates targets lacking traditional SUMO consensus motifs that are physically SUMOylated, alongside negative controls that exhibit valid motifs but do not undergo modification. This deep evaluation proves that our system bypasses simple linear sequence patterns, successfully mapping complex spatial features via deep architectural layers.
+          </Text>
+
+          <Card.Section p="md" bg="var(--mantine-color-gray-0)">
+            <Stack align="center" gap="xs">
+              <Image 
+                src="/hard.png"
+                alt="ROC Curve Analysis on Hard Test Sets"   
+                radius="md"
+                fit="contain"
+                maxWidth="100%"
+                h={350}
+              />
+              <Text size="xs" c="dimmed" style={{ fontStyle: "italic" }}>
+                Figure 3: ROC Curve Dissection and Sequence Specificity Under Hard Case Trials
+              </Text>
+            </Stack>
+          </Card.Section>
+        </Card>
+
+        {/* REFERANS / ATIF */}
+        <Card shadow="sm" padding="lg" radius="md" withBorder bg="var(--mantine-color-blue-0)">
+          <Group mb="xs">
+            <ThemeIcon color="blue" variant="light" size="md">
+              <IconQuote size="1rem" />
+            </ThemeIcon>
+            <Text fw={700} size="sm" c="blue.9">Citation</Text>
+          </Group>
+          <Text size="sm" mb="xs" c="slate.9">
+            If you utilize the SUMO-ESM framework or any code dependencies in your empirical pipeline, please cite the core methodology:
+          </Text>
+          <Anchor 
+            href="1" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            fw={600}
+            size="sm"
+          >
+            
+          </Anchor>
+        </Card>
+
+        <Divider my="sm" />
+
+        {/* GELİŞTİRİCİ EKİP */}
+        <div>
+          <Group mb="md" gap="xs">
+            <ThemeIcon color="gray" variant="light" size="md">
+              <IconUsers size="1rem" />
+            </ThemeIcon>
+            <Title order={2} size="h4">Website Developers</Title>
+          </Group>
+          
+          <SimpleGrid cols={{ base: 1, sm: 2 }} gap="md">
+            <Card padding="sm" radius="sm" withBorder>
+              <Text fw={600} size="sm">Alper Mert</Text>
+              <Anchor href="mailto:alpermert@sabanciuniv.edu" size="xs" c="dimmed">alpermert@sabanciuniv.edu</Anchor>
+            </Card>
+            <Card padding="sm" radius="sm" withBorder>
+              <Text fw={600} size="sm">Bülent Emin Üstün</Text>
+              <Anchor href="mailto:eustun@sabanciuniv.edu" size="xs" c="dimmed">eustun@sabanciuniv.edu</Anchor>
+            </Card>
+            <Card padding="sm" radius="sm" withBorder>
+              <Text fw={600} size="sm">Mehmet Eren Karabulut</Text>
+              <Anchor href="mailto:mkarabulut@sabanciuniv.edu" size="xs" c="dimmed">mkarabulut@sabanciuniv.edu</Anchor>
+            </Card>
+            <Card padding="sm" radius="sm" withBorder>
+              <Text fw={600} size="sm">Şevki Aybars Türel</Text>
+              <Anchor href="mailto:aturel@sabanciuniv.edu" size="xs" c="dimmed">aturel@sabanciuniv.edu</Anchor>
+            </Card>
+          </SimpleGrid>
+        </div>
+      </Stack>
+    </Container> 
+  );
+}
