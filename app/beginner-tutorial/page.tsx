@@ -72,14 +72,15 @@ export default function BeginnerTutorialPage() {
               <Title order={3} size="h4" mb="xs" c="blue">1.2) Batch Prediction with Multiple UniProt IDs</Title>
               <Text mb="md">You can also query multiple UniProt IDs simultaneously by separating them. Here is an example of a multi-query submission:</Text>
               
-              <Grid gutter="md" align="center">
-                <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Image src="/UniprotIdMulti.png" alt="Multiple UniProt ID Input" radius="md" fit="contain" h={250} />
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Image src="/UniprotIdMulti2.jpeg" alt="Multiple UniProt ID Input Detail" radius="md" fit="contain" h={250} />
-                </Grid.Col>
-              </Grid>
+              <Card.Section p="md" bg="var(--mantine-color-gray-0)">
+            <Image 
+              src="/uniProtIdMulti.png"
+              alt="UniProt ID Prediction Interface"   
+              radius="md"
+              fit="contain"
+              h={300}
+            />
+          </Card.Section>
               
               <Text mt="md" mb="xs" size="sm" c="dimmed">The combined prediction results for all specified proteins will be generated as follows:</Text>
               <Image src="/exampleOutput1.png" alt="Batch Output Results" radius="md" fit="contain" h={400} />
